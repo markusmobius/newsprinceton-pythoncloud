@@ -1,5 +1,5 @@
 import os
-from DataVersionMachine import DataVersionMachine
+from RemoteBlobStore.DataVersionMachine import DataVersionMachine
 
 def main():
     machine=DataVersionMachine(clientHash=os.getenv("legocloud_clienthash"),serverUrl="https://www.legocloud.projectratio.net:6002",cacheFolder="c:/temp")
