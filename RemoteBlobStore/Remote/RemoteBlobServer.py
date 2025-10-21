@@ -32,34 +32,46 @@ class RemoteBlobServer:
             stderr=subprocess.PIPE,
             stdin=subprocess.PIPE,
             cwd=self.workingDir,
-            text=True,
-            bufsize=1  # line-buffered
+            text=False, # read raw bytes (NOT text mode)
+            bufsize=0 # line-buffered
         )
 
         self.isReadyFlag = False
 
+
         def read_stdout():
-            """Read stdout line by line. First line = port; others printed."""
+            buffer = b""
             first_line = True
-            for line in self.server.stdout:
-                if first_line:
-                    line = line.strip()
+            while True:
+                chunk = self.server.stdout.read(1024)
+                if not chunk:
+                    break
+                buffer += chunk
+
+                if first_line and b"\n" in buffer:
+                    line, buffer = buffer.split(b"\n", 1)
                     try:
-                        self.port = int(line)
+                        self.port = int(line.strip())
                         self.isReadyFlag = True
                         with self.isReady:
                             self.isReady.notify()
                     except Exception as e:
                         raise Exception("cannot start remote server") from e
                     first_line = False
-                else:
-                    # Print exactly as received — don't strip \r
-                    print(line, end='', flush=True)
+
+                if not first_line and buffer:
+                    # Write raw bytes directly to stdout file descriptor.
+                    # This completely bypasses Python’s text encoding.
+                    os.write(1, buffer)
+                    buffer = b""
 
         def read_stderr():
-            """Print stderr lines as they come."""
-            for line in self.server.stderr:
-                print(line.strip(), flush=True)
+            while True:
+                chunk = self.server.stderr.read(1024)
+                if not chunk:
+                    break
+                print(chunk.decode('utf-8', errors='replace'), end='', flush=True)
+
 
         threading.Thread(target=read_stdout, daemon=True).start()
         threading.Thread(target=read_stderr, daemon=True).start()
