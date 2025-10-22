@@ -60,7 +60,7 @@ class DirectorySet:
         for i in range(count):
             id=reader.ReadString()
             f=FileFilter()
-            f.ReadBinary()
+            f.ReadBinary(reader)
             self.filters[id]=f
 
 
