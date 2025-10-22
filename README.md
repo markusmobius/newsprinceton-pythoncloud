@@ -51,7 +51,7 @@ if __name__ == '__main__':
 
 We create a ```DataVersionMachine``` class by providing ```clienthash``` and ```serverURL``` for the cloud server as well as a ```cacheFolder``` for the local data. All the locally accessed data files will be stored in that cache folder.
 
-Given a config file we check whether the data exists already in the cache or the on the server using ```loadVersion```. If it exist, the method downloads the data if it is in the local cache and returns the local path (unless ```debug=True``` is set in which case we only look in local cache). Otherwise, we create a temporary file name with a unique hash of the config file as the filename. Typically, this will be a new data store that we are constructing. We then use ```saveVersion``` to move the data into the local cache and upload this data to cloud storage (unless ```debug=True``` is set in which case we don't upload the file to the cloud).
+Given a config file we check whether the data exists already in the cache or the on the server using ```loadVersion```. If it exists, the method downloads the data if it is in the local cache and returns the local path (unless ```debug=True``` is set in which case we only look in local cache). Otherwise, we create a temporary file name with a unique hash of the config file as the filename. Typically, this will be a new data store that we are constructing. We then use ```saveVersion``` to move the data into the local cache and upload this data to cloud storage (unless ```debug=True``` is set in which case we don't upload the file to the cloud).
 
 There is also a ```getEphemeralFile``` method which creates a temporary file that has a unique id (unconnected to any config file) and that lives during the duration of the current program. 
 
