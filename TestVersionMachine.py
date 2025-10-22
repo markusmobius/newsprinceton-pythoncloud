@@ -2,7 +2,7 @@ import os
 from RemoteBlobStore.DataVersionMachine import DataVersionMachine
 
 def main():
-    machine=DataVersionMachine(clientHash=os.getenv("legocloud_clienthash"),serverUrl="https://www.legocloud.projectratio.net:6002",cacheFolder="c:/temp")
+    machine=DataVersionMachine(clientHash=os.getenv("legopds_clienthash"),serverUrl="https://www.legopds.projectratio.net:6008",cacheFolder="c:/temp")
     config={"key1":"this is a test","key2":"this is really a test","key2":"this is really a test - another one!"}
     print(f"Trying to locate data file for config {machine.getConfigJson(config)}")
     localFileName=machine.loadVersion(cloudPath="pds/test",config=config)
