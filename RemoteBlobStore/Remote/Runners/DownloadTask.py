@@ -48,7 +48,7 @@ class DirectorySet:
         writer.Write(len(self.filters))
         for key, filter in self.filters.items():
             writer.Write(key)
-            filter.WriteBinary()
+            filter.WriteBinary(writer)
     
     def ReadBinary(self,reader: ChunkReader):
         count = reader.ReadInt32()
