@@ -60,7 +60,7 @@ class DataVersionMachine:
         if dirStatus==None:
             return None
         if hash in dirStatus.files:
-            task=DownloadTask(localRootDirectory=self.cacheFolder,downloads=DirectorySet(paths=[cloudPath+"/{{PATTERN}}|"],filters={"PATTERN": FilterPattern(patterns=["*"+hash+"*"])}))
+            task=DownloadTask(localRootDirectory=self.cacheFolder,downloads=DirectorySet(paths=[cloudPath+"/"+hash+"|"]))
             self.cloud.Download(downloads=task)
             return localPath
         else:

@@ -12,6 +12,11 @@ class FileFilter:
         writer.Write(self.name)
         writer.Write(json.dumps(self.definition,default=lambda x: x.__dict__))
 
+    def ReadBinary(self, reader: ChunkReader):
+        self.name=reader.ReadString()
+        self.definition=json.loads(reader.ReadString())
+
+
 class FilterPattern(FileFilter):
     def __init__(self, patterns : list[str]):
         self.name="pattern"
