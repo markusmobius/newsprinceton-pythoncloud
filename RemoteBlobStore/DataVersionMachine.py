@@ -84,10 +84,10 @@ class DataVersionMachine:
         tempSubdir.mkdir(parents=True, exist_ok=True)
         shutil.copy(localPath,os.path.join(self.tempFolder,guid,hash))
         tagRules=[]
-        for stage in config:
-            tagRules.append(TagRule(key="config",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
-        for stage in statistics:
-            tagRules.append(TagRule(key="statistics",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
+        for i, stage in enumerate(config):
+            tagRules.append(TagRule(key=f"config_{i}",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
+        for i, stage in enumerate(statistics):
+            tagRules.append(TagRule(key=f"statistics_{i}",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
         self.cloud.Upload(localDirectory=os.path.join(self.tempFolder,guid),cloudDirectory=cloudPath,tagRules=tagRules,publicRules=[],recursiveUpload=False)
         #delete the temporary subfolder
         shutil.rmtree(os.path.join(self.tempFolder,guid))
