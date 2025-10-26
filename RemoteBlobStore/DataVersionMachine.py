@@ -38,8 +38,8 @@ class DataVersionMachine:
             print(f"Warning: error closing RemoteBlobServer: {e}")
 
             
-    def getTempFile(self, config: any):
-        hash = self.getHash(config)
+    def getTempFile(self, stages: list[Stage]):
+        hash = self.getHash(stages)
         return os.path.join(self.tempFolder,hash)
     
     def getEphemeralFile(self):
@@ -50,8 +50,8 @@ class DataVersionMachine:
         json_str = json.dumps(stages, default=lambda x: x.__dict__, sort_keys=True)
         return json_str
 
-    def getHash(self, config :any):
-        json_str=self.getConfigJson(config)
+    def getHash(self, stages: list[Stage]):
+        json_str=self.getConfigJson(stages)
         hash_object = hashlib.sha256(json_str.encode('utf-8'))
         return hash_object.hexdigest()
 
