@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='RemoteBlobStore',
-    version='1.0.15',
+    version='1.0.16',
     description='Python library for accessing cloud files',
     url='https://github.com/markusmobius/newsprinceton-pythoncloud',
     packages=find_packages(),

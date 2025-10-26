@@ -91,6 +91,7 @@ class DataVersionMachine:
         tempSubdir.mkdir(parents=True, exist_ok=True)
         shutil.copy(localPath,os.path.join(self.tempFolder,guid,hash))
         tagRules=[]
+        tagRules.append(TagRule(key=f"__tagdisplay",value="stages",kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
         tagRules.append(TagRule(key=f"stages",value=self.getConfigJson(stages),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
         tagRules.append(TagRule(key=f"logs",value=self.getConfigJson(logs),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
         self.cloud.Upload(localDirectory=os.path.join(self.tempFolder,guid),cloudDirectory=cloudPath,tagRules=tagRules,publicRules=[],recursiveUpload=False)
