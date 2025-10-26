@@ -10,6 +10,13 @@ import uuid
 import shutil
 import atexit
 
+class Stage:
+
+    def __init__(self, code_version: str, config: any):
+        self.code_version=code_version
+        self.config=config
+
+
 class DataVersionMachine:
     def __init__(self, clientHash: str, serverUrl: str, cacheFolder: str):
         self.server = RemoteBlobServer()
@@ -39,8 +46,8 @@ class DataVersionMachine:
         guid=str(uuid.uuid4())
         return os.path.join(self.tempFolder,guid)
 
-    def getConfigJson(self,config : any):
-        json_str = json.dumps(config, default=lambda x: x.__dict__, sort_keys=True)
+    def getConfigJson(self,stages :list[Stage]):
+        json_str = json.dumps(stages, default=lambda x: x.__dict__, sort_keys=True)
         return json_str
 
     def getHash(self, config :any):
@@ -49,8 +56,8 @@ class DataVersionMachine:
         return hash_object.hexdigest()
 
     #cloudPath is a path to the directory where the versions will be stored
-    def loadVersion(self, cloudPath: str, config: any, debug:bool = False):
-        hash = self.getHash(config)
+    def loadVersion(self, cloudPath: str, stages: list[Stage], debug:bool = False):
+        hash = self.getHash(stages)
         localPath=os.path.join(self.cacheFolder,cloudPath,hash)
         if os.path.exists(localPath):
             return localPath
@@ -66,10 +73,10 @@ class DataVersionMachine:
         else:
             return None
 
-    def saveVersion(self, tempFileName, cloudPath: str, config: any, statistics: any = None, debug:bool = False):
-        if statistics is None:
-            statistics=[]
-        hash = self.getHash(config)        
+    def saveVersion(self, tempFileName, cloudPath: str, stages: list[Stage], logs: list[str], debug:bool = False):
+        if len(stages)!=len(logs):
+            raise Exception(f"stage length {len(stages)} does not match log length {len(logs)}")
+        hash = self.getHash(stages)        
         if hash!=os.path.basename(tempFileName):
             raise Exception("temp filename does not match config")
         localPath=os.path.join(self.cacheFolder,cloudPath,hash)
@@ -84,10 +91,8 @@ class DataVersionMachine:
         tempSubdir.mkdir(parents=True, exist_ok=True)
         shutil.copy(localPath,os.path.join(self.tempFolder,guid,hash))
         tagRules=[]
-        for i, stage in enumerate(config):
-            tagRules.append(TagRule(key=f"config_{i}",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
-        for i, stage in enumerate(statistics):
-            tagRules.append(TagRule(key=f"statistics_{i}",value=self.getConfigJson(stage),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
+        tagRules.append(TagRule(key=f"stages",value=self.getConfigJson(stages),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
+        tagRules.append(TagRule(key=f"logs",value=self.getConfigJson(logs),kvFilter=BlobFilter(ftype="pattern",filterDefinition="*")))
         self.cloud.Upload(localDirectory=os.path.join(self.tempFolder,guid),cloudDirectory=cloudPath,tagRules=tagRules,publicRules=[],recursiveUpload=False)
         #delete the temporary subfolder
         shutil.rmtree(os.path.join(self.tempFolder,guid))
