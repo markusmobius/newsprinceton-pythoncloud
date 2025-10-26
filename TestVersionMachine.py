@@ -3,7 +3,7 @@ from RemoteBlobStore.DataVersionMachine import DataVersionMachine, Stage
 
 def main():
     machine=DataVersionMachine(clientHash=os.getenv("legopds_clienthash"),serverUrl="https://www.legopds.projectratio.net:6008",cacheFolder="c:/temp")
-    stages=[Stage(code_version="1.0",confifg={"key1":"this is a test","key2":"this is really a test","key2":"this is really a test - another one!"})]
+    stages=[Stage(code_version="1.0",config={"key1":"this is a test","key2":"this is really a test","key2":"this is really a test - another one!"})]
     print(f"Trying to locate data file for stage configuration {machine.getConfigJson(stages)}")
     localFileName=machine.loadVersion(cloudPath="pds/test",stages=stages)
     if localFileName==None:
@@ -14,7 +14,7 @@ def main():
         with open(tempFileName, "w") as f:
             f.write("This is a new file with some dummy content ...")
         print("Saving temporary data to cloud storage")
-        machine.saveVersion(tempFileName=tempFileName,cloudPath="pds/test",stages=stages)
+        machine.saveVersion(tempFileName=tempFileName,cloudPath="pds/test",stages=stages,logs=["this is a test"])
     else:
         print("File exists!")
     

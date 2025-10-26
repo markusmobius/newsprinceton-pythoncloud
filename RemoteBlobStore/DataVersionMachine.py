@@ -73,7 +73,7 @@ class DataVersionMachine:
         else:
             return None
 
-    def saveVersion(self, tempFileName, cloudPath: str, stages: list[Stage], logs: list[str], debug:bool = False):
+    def saveVersion(self, tempFileName, cloudPath: str, stages: list[Stage], logs: list[any], debug:bool = False):
         if len(stages)!=len(logs):
             raise Exception(f"stage length {len(stages)} does not match log length {len(logs)}")
         hash = self.getHash(stages)        
