@@ -12,7 +12,8 @@ import atexit
 
 class Stage:
 
-    def __init__(self, code_version: str, config: any):
+    def __init__(self, stage_name : str, code_version: str, config: any):
+        self.stage_name=stage_name
         self.code_version=code_version
         self.config=config
 
