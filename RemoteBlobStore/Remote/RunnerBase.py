@@ -24,14 +24,14 @@ class RunnerBase:
     def send(self, socket, set):
         self.intBuffer = bytearray(struct.pack('>I', len(set.Parts)))
         # print("debug",len(set.Parts))
-        socket.send(self.intBuffer)
+        socket.sendall(self.intBuffer)
         for i in range(len(set.Parts)):
             self.intBuffer = bytearray(struct.pack('>I', set.Parts[i].PartLength))
-            socket.send(self.intBuffer)
+            socket.sendall(self.intBuffer)
             offset = set.Parts[i].Offset
             part_length = set.Parts[i].PartLength
             data_mv = memoryview(set.Parts[i].Part.data)
-            socket.send(data_mv[offset : offset + part_length])
+            socket.sendall(data_mv[offset : offset + part_length])
 
 
     def read(self, socket):
