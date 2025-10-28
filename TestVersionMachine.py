@@ -1,4 +1,5 @@
 import os
+from time import sleep
 from RemoteBlobStore.DataVersionMachine import DataVersionMachine, Stage
 
 def main():
@@ -13,6 +14,8 @@ def main():
         print("Writing data to temporary file")
         with open(tempFileName, "w") as f:
             f.write("This is a new file with some dummy content ...")
+        print("Waiting 120 seconds ...")
+        sleep(120)
         print("Saving temporary data to cloud storage")
         machine.saveVersion(tempFileName=tempFileName,cloudPath="pds/test",stages=stages,logs=["this is a test log"])
     else:
