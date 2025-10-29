@@ -3,7 +3,7 @@ from time import sleep
 from RemoteBlobStore.DataVersionMachine import DataVersionMachine, Stage
 
 def main():
-    machine=DataVersionMachine(clientHash=os.getenv("legopds_clienthash"),serverUrl="https://www.legopds.projectratio.net:6008",cacheFolder="c:/temp")
+    machine=DataVersionMachine(clientHash=os.getenv("CLOUDPDS_CLIENT_HASH"),serverUrl="https://www.legopds.projectratio.net:6008",cacheFolder="c:/temp")
     stages=[Stage(stage_name="initial", code_version="1.0",config={"key1":"this is a test","key2":"this is really a test","key2":"this is really a test - another one!","key3":"This is the third key (and now we made a change)."})]
     print(f"Trying to locate data file for stage configuration {machine.getConfigJson(stages)}")
     localFileName=machine.loadVersion(cloudPath="pds/test",stages=stages)
