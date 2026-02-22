@@ -8,7 +8,7 @@ from RemoteBlobStore.Remote.Runners.UploadTask import TagRule, BlobFilter
 
 def main():
     server = RemoteBlobServer()
-    cloud = CloudMachine(port=server.port,clientHash=os.getenv("legopds_clienthash"),serverUrl="https://www.legopds.projectratio.net:6008")
+    cloud = CloudMachine(port=server.port,clientHash=os.getenv("CLOUDPDS_CLIENT_HASH"),serverUrl="https://www.legopds.projectratio.net:6008")
     print(f"Remote blob server is on port {server.port}")
     #time.sleep(100)
 
